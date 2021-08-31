@@ -23,7 +23,16 @@ describe ExchangeController, type: :controller do
       end
     end
 
-    context 'with invalid params' do
+    context 'when amount is higher than 100 millions' do
+      let(:params) { { amount: 100_000_001, currency_from: 'USD', currency_to: 'CAD' } }
+      it 'returns a amount too high error' do
+        response = subject
+        expect(JSON.parse(response.body)['error']).to eq('amount is too high')
+        expect(subject.status).to eq(400)
+      end
+    end
+
+    context 'with invalid currencies' do
       let(:params) { { currency_from: 'US', currency_to: 'CAD' } }
       it 'returns an invalid currency error' do
         response = subject

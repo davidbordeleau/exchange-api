@@ -2,8 +2,11 @@
 
 class ExchangeController < ApplicationController
   RATE_EXPIRATION = 1.day
+  MAXIMUM_AMOUNT = 100_000_000
 
   class InvalidCurrency < ArgumentError; end
+
+  class AmountTooHigh < ArgumentError; end
 
   def rate
     rates = fetch_currency_rates.body['rates']
@@ -35,7 +38,13 @@ class ExchangeController < ApplicationController
   def amount_by_currencies(from, to)
     raise InvalidCurrency, 'invalid currency' unless from && to
 
-    amount = params[:amount] || 1
-    amount.to_f * (to / from)
+    sanitize_amount * (to / from)
+  end
+
+  def sanitize_amount
+    amount = params[:amount] ? Float(params[:amount]) : 1.0
+    raise AmountTooHigh, 'amount is too high' unless amount <= MAXIMUM_AMOUNT
+
+    amount
   end
 end
