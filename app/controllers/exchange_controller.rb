@@ -17,7 +17,7 @@ class ExchangeController < ApplicationController
   rescue ArgumentError => e
     render json: { error: e.message }, status: 400
   rescue StandardError
-    render json: { error: 'An error has occured, please try again later.' }, status: 404
+    render json: { error: 'An error has occured, please try again later.' }, status: 500
   end
 
   private
