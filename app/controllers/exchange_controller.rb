@@ -38,7 +38,7 @@ class ExchangeController < ApplicationController
   def amount_by_currencies(from, to)
     raise InvalidCurrency, 'invalid currency' unless from && to
 
-    sanitize_amount * (to / from)
+    BigDecimal(sanitize_amount.to_s, 5) * (BigDecimal(to.to_s, 5) / BigDecimal(from.to_s, 5))
   end
 
   def sanitize_amount
