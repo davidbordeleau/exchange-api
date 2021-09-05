@@ -13,7 +13,7 @@ class ExchangeController < ApplicationController
     currency_from = rates[params[:currency_from]]
     currency_to = rates[params[:currency_to]]
 
-    render json: amount_by_currencies(currency_from, currency_to)
+    render json: { amount_result: amount_by_currencies(currency_from, currency_to) }
   rescue ArgumentError => e
     render json: { error: e.message }, status: 400
   rescue StandardError
